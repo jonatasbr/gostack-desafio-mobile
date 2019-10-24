@@ -13,7 +13,7 @@ import {
   SignLinkText,
 } from './styles';
 
-export default function SignIn() {
+export default function SignIn({navigation}) {
   const passwordRef = useRef();
 
   function handleSubmit() {}
@@ -46,7 +46,7 @@ export default function SignIn() {
           <SubmitButton onPress={handleSubmit}>Acessar</SubmitButton>
         </Form>
 
-        <SignLink onPress={() => {}}>
+        <SignLink onPress={() => navigation.navigate('SignUp')}>
           <SignLinkText>Criar conta gratuita</SignLinkText>
         </SignLink>
       </Container>
