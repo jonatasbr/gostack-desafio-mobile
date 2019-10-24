@@ -1,9 +1,10 @@
 package com.desafio10;
 
-import com.facebook.react.ReactActivity;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.facebook.react.ReactPackage;
 
 public class MainActivity extends ReactActivity {
 
