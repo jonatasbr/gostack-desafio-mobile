@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Image} from 'react-native';
+import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 
 import logo from '~/assets/logo.png';
@@ -71,3 +72,11 @@ export default function SignIn({navigation}) {
     </Background>
   );
 }
+
+SignIn.propTypes = {
+  navigation: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+};
+
+SignIn.defaultProps = {
+  navigation: {},
+};
