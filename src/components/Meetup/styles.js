@@ -31,7 +31,7 @@ export const Info = styled.View`
   margin-top: 10px;
 `;
 
-export const Date = styled.View`
+export const DateView = styled.View`
   display: flex;
   flex-direction: row;
   margin-top: 10px;

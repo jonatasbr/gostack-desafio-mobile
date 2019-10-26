@@ -7,7 +7,7 @@ import {
   Content,
   Title,
   Info,
-  Date,
+  DateView,
   Location,
   Owner,
   ButtonSubscription,
@@ -23,10 +23,10 @@ export default function Meetup() {
       <Content>
         <Title>Natal</Title>
         <Info>
-          <Date>
+          <DateView>
             <Icon name="event" size={18} color="#999" />
-            <Text>25 de Dezembro, às 0h</Text>
-          </Date>
+            <Text>26 de outubro</Text>
+          </DateView>
           <Location>
             <Icon name="location-on" size={18} color="#999" />
             <Text>Em todo o mundo</Text>

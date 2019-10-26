@@ -1,7 +1,9 @@
-import React from 'react';
-import {Text} from 'react-native';
+import React, {useState, useMemo} from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import {format, subDays, addDays} from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import Header from '~/components/Header';
 import Background from '~/components/Background';
@@ -18,16 +20,27 @@ import Meetup from '~/components/Meetup';
 const data = [1, 2, 3, 4, 5];
 
 export default function Dashboard() {
+  const [date, setDate] = useState(new Date());
+
+  const now = useMemo(() => format(date, "d 'de' MMMM", {locale: pt}), [date]);
+
+  function handleDatePrev() {
+    setDate(subDays(date, 1));
+  }
+  function handleDateNext() {
+    setDate(addDays(date, 1));
+  }
+
   return (
     <Background>
       <Header />
       <Container>
         <ViewDate>
-          <ButtonDatePrev onPress={() => {}}>
+          <ButtonDatePrev onPress={handleDatePrev}>
             <Icon name="chevron-left" size={25} color="#FFF" />
           </ButtonDatePrev>
-          <Day>26 de outubro</Day>
-          <ButtonDateNext onPress={() => {}}>
+          <Day>{now}</Day>
+          <ButtonDateNext onPress={handleDateNext}>
             <Icon name="chevron-right" size={25} color="#FFF" />
           </ButtonDateNext>
         </ViewDate>
