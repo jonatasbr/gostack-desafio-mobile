@@ -7,6 +7,7 @@ export const Container = styled.View`
   border-radius: 4px;
   margin-bottom: 20px;
   background: #fff;
+  opacity: ${props => (props.past ? 0.85 : 1)};
 `;
 
 export const Content = styled.View`

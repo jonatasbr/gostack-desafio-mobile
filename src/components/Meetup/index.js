@@ -14,31 +14,37 @@ import {
   Text,
 } from './styles';
 
-import logo from '~/assets/picture-example.png';
-
-export default function Meetup() {
+export default function Meetup({data}) {
   return (
-    <Container>
-      <Image source={logo} />
+    <Container key={data.id} past={data.past}>
+      <Image
+        source={{
+          uri: data.image
+            ? data.image.url
+            : `https://api.adorable.io/avatar/50/${data.image.url}.png`,
+        }}
+      />
       <Content>
-        <Title>Natal</Title>
+        <Title>{data.title}</Title>
         <Info>
           <DateView>
             <Icon name="event" size={18} color="#999" />
-            <Text>26 de outubro</Text>
+            <Text>{data.dateFormated}</Text>
           </DateView>
           <Location>
             <Icon name="location-on" size={18} color="#999" />
-            <Text>Em todo o mundo</Text>
+            <Text>{data.location}</Text>
           </Location>
           <Owner>
             <Icon name="person" size={18} color="#999" />
-            <Text>Organizador: Deus, o soberano</Text>
+            <Text>{`Organizador: ${data.user.name}`}</Text>
           </Owner>
         </Info>
-        <ButtonSubscription onPress={() => {}}>
-          Realizar inscrição
-        </ButtonSubscription>
+        {!data.past && (
+          <ButtonSubscription onPress={() => {}}>
+            Realizar inscrição
+          </ButtonSubscription>
+        )}
       </Content>
     </Container>
   );

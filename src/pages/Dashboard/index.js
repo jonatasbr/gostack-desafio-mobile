@@ -1,9 +1,10 @@
-import React, {useState, useMemo} from 'react';
-
+import React, {useState, useMemo, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import {format, subDays, addDays} from 'date-fns';
+import {format, subDays, addDays, formatRelative, parseISO} from 'date-fns';
 import pt from 'date-fns/locale/pt';
+
+import api from '~/services/api';
 
 import Header from '~/components/Header';
 import Background from '~/components/Background';
@@ -17,18 +18,43 @@ import {
 } from './styles';
 import Meetup from '~/components/Meetup';
 
-const data = [1, 2, 3, 4, 5];
-
 export default function Dashboard() {
   const [date, setDate] = useState(new Date());
+  const [meetups, setMeetups] = useState([]);
+  const [page, setPage] = useState(1);
 
   const now = useMemo(() => format(date, "d 'de' MMMM", {locale: pt}), [date]);
 
+  async function loadMeetups() {
+    const dateQuery = format(date, "yyyy'-'MM'-'dd", {locale: pt});
+    const response = await api.get('meetups', {
+      params: {date: dateQuery, page},
+    });
+
+    const data = response.data.map(meetup => {
+      const dateFormated = formatRelative(parseISO(meetup.date), new Date(), {
+        locale: pt,
+        addSuffix: true,
+      });
+      return {
+        ...meetup,
+        dateFormated,
+      };
+    });
+    setMeetups(data);
+  }
+
+  useEffect(() => {
+    loadMeetups();
+  }, [date, page]);
+
   function handleDatePrev() {
     setDate(subDays(date, 1));
+    setPage(1);
   }
   function handleDateNext() {
     setDate(addDays(date, 1));
+    setPage(1);
   }
 
   return (
@@ -46,7 +72,7 @@ export default function Dashboard() {
         </ViewDate>
 
         <List
-          data={data}
+          data={meetups}
           keyExtractor={item => String(item.id)}
           onEndReachedThreshold={0.2}
           renderItem={({item}) => <Meetup onSubscribe={() => {}} data={item} />}
