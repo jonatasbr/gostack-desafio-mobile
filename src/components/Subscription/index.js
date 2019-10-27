@@ -14,31 +14,37 @@ import {
   Text,
 } from './styles';
 
-import image from '~/assets/picture-example.png';
-
-export default function Subscription({data}) {
+export default function Subscription({data, onUnsubscription}) {
   return (
     <Container>
-      <Image source={image} />
+      <Image
+        source={{
+          uri: data.meetup.image
+            ? data.meetup.image.url
+            : `https://api.adorable.io/avatar/50/${data.meetup.image.url}`,
+        }}
+      />
       <Content>
-        <Title>TESTE</Title>
+        <Title>{data.meetup.title}</Title>
         <Info>
           <DateView>
             <Icon name="event" size={18} color="#999" />
-            <Text>26 de outubro, às 20hs</Text>
+            <Text>{data.dateFormated}</Text>
           </DateView>
           <Location>
             <Icon name="location-on" size={18} color="#999" />
-            <Text>Jequitibás - Sobradinho/DF</Text>
+            <Text>{data.meetup.location}</Text>
           </Location>
           <Owner>
             <Icon name="person" size={18} color="#999" />
-            <Text>Organizador: Jonatas</Text>
+            <Text>{`Organizador: ${data.meetup.user.name}`}</Text>
           </Owner>
         </Info>
-        <ButtonSubscription onPress={() => {}}>
-          Cancelar inscrição
-        </ButtonSubscription>
+        {!data.meetup.past && (
+          <ButtonSubscription onPress={onUnsubscription}>
+            Cancelar inscrição
+          </ButtonSubscription>
+        )}
       </Content>
     </Container>
   );
