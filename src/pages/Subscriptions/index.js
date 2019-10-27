@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Alert} from 'react-native';
+import {withNavigationFocus} from 'react-navigation';
+
 import {formatRelative, parseISO} from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -12,35 +14,37 @@ import Subscription from '~/components/Subscription';
 
 import api from '~/services/api';
 
-export default function Subscriptions() {
-  const [meetups, setMeetups] = useState([]);
+function Subscriptions({isFocused}) {
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  async function loadSubscription() {
+    const response = await api.get('subscriptions');
+
+    const data = response.data.map(meetup => {
+      const dateFormated = formatRelative(
+        parseISO(meetup.meetup.date),
+        new Date(),
+        {
+          locale: pt,
+          addSuffix: true,
+        },
+      );
+      return {
+        ...meetup,
+        dateFormated,
+      };
+    });
+    setSubscriptions(data);
+  }
 
   useEffect(() => {
-    async function loadSubscription() {
-      const response = await api.get('subscriptions');
-
-      const data = response.data.map(meetup => {
-        const dateFormated = formatRelative(
-          parseISO(meetup.meetup.date),
-          new Date(),
-          {
-            locale: pt,
-            addSuffix: true,
-          },
-        );
-        return {
-          ...meetup,
-          dateFormated,
-        };
-      });
-      setMeetups(data);
-    }
-    loadSubscription();
-  }, [meetups]);
+    if (isFocused) loadSubscription();
+  }, [isFocused]);
 
   async function handleUnsubscription(id) {
     try {
       await api.delete(`subscriptions/${id}`);
+      loadSubscription();
       Alert.alert('Sucesso', 'Sua inscrição foi cancelada');
     } catch (error) {
       Alert.alert('Erro', 'Ocorreu um erro ao cancelar inscrição');
@@ -52,7 +56,7 @@ export default function Subscriptions() {
       <Header />
       <Container>
         <List
-          data={meetups}
+          data={subscriptions}
           keyExtractor={item => String(item.id)}
           onEndReachedThreshold={0.2}
           renderItem={({item}) => (
@@ -73,3 +77,5 @@ Subscriptions.navigationOptions = {
     <Icon name="local-offer" size={20} color={tintColor} />
   ),
 };
+
+export default withNavigationFocus(Subscriptions);

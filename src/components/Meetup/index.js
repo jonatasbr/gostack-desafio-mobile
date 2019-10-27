@@ -14,7 +14,7 @@ import {
   Text,
 } from './styles';
 
-export default function Meetup({data}) {
+export default function Meetup({data, onSubscription}) {
   return (
     <Container key={data.id} past={data.past}>
       <Image
@@ -41,7 +41,7 @@ export default function Meetup({data}) {
           </Owner>
         </Info>
         {!data.past && (
-          <ButtonSubscription onPress={() => {}}>
+          <ButtonSubscription onPress={onSubscription}>
             Realizar inscrição
           </ButtonSubscription>
         )}

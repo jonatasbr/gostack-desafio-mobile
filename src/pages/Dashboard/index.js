@@ -1,4 +1,5 @@
 import React, {useState, useMemo, useEffect} from 'react';
+import {Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import {format, subDays, addDays, formatRelative, parseISO} from 'date-fns';
@@ -48,6 +49,15 @@ export default function Dashboard() {
     loadMeetups();
   }, [date, page]);
 
+  async function handleSubscription(id) {
+    try {
+      await api.post(`meetups/${id}/subscriptions`);
+      Alert.alert('Sucesso', 'Sua inscrição foi realizada com sucesso');
+    } catch (error) {
+      Alert.alert('Erro', 'Ocorreu um erro ao realizar inscrição');
+    }
+  }
+
   function handleDatePrev() {
     setDate(subDays(date, 1));
     setPage(1);
@@ -75,7 +85,12 @@ export default function Dashboard() {
           data={meetups}
           keyExtractor={item => String(item.id)}
           onEndReachedThreshold={0.2}
-          renderItem={({item}) => <Meetup onSubscribe={() => {}} data={item} />}
+          renderItem={({item}) => (
+            <Meetup
+              onSubscription={() => handleSubscription(item.id)}
+              data={item}
+            />
+          )}
         />
       </Container>
     </Background>
